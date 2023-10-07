@@ -133,7 +133,7 @@ public class LanguageManagerImpl implements LanguageManager {
             return;
         }
 
-        try (Stream<Path> paths = Files.walk(languageFolder, 0)) {
+        try (Stream<Path> paths = Files.walk(languageFolder, 1)) {
             paths.forEach(path -> {
                 if (Files.isDirectory(path)) {
                     return;
