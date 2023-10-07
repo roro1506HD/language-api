@@ -135,6 +135,10 @@ public class LanguageManagerImpl implements LanguageManager {
 
         try (Stream<Path> paths = Files.walk(languageFolder, 0)) {
             paths.forEach(path -> {
+                if (Files.isDirectory(path)) {
+                    return;
+                }
+
                 try (InputStream inputStream = Files.newInputStream(path)) {
                     JsonObject root = LanguageManagerImpl.GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
 
