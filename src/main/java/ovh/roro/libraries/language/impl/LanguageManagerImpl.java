@@ -33,6 +33,7 @@ import ovh.roro.libraries.language.impl.data.LanguageNumberDataImpl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
@@ -140,7 +141,7 @@ public class LanguageManagerImpl implements LanguageManager {
                 }
 
                 try (InputStream inputStream = Files.newInputStream(path)) {
-                    JsonObject root = LanguageManagerImpl.GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
+                    JsonObject root = LanguageManagerImpl.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), JsonObject.class);
 
                     JsonObject data = GsonHelper.getAsJsonObject(root, "data");
                     JsonObject translations = GsonHelper.getAsJsonObject(root, "translations");
