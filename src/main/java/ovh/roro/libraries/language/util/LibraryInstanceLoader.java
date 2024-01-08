@@ -29,10 +29,11 @@ public class LibraryInstanceLoader<T> {
         this.instanceCreator = instanceCreator;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public @NotNull T getOrCreate() {
         Optional<Class<?>> caller = LibraryInstanceLoader.STACK_WALKER.walk(s -> {
             return s.<Class<?>>map(StackWalker.StackFrame::getDeclaringClass)
-                    .skip(2)
+                    .filter(clazz -> clazz.getClassLoader() instanceof ConfiguredPluginClassLoader)
                     .findFirst();
         });
 
