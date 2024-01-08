@@ -5,7 +5,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ovh.roro.libraries.language.api.Language;
-import ovh.roro.libraries.language.api.LanguageManager;
 import ovh.roro.libraries.language.api.data.LanguageNumberData;
 
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
 @ApiStatus.Internal
 public class LanguageImpl implements Language {
 
-    private final @NotNull LanguageManager languageManager;
+    private final @NotNull LanguageManagerImpl languageManager;
 
     private final int id;
     private final @NotNull String name;
@@ -25,7 +24,7 @@ public class LanguageImpl implements Language {
     private final @NotNull Map<String, String> translations;
 
     public LanguageImpl(
-            @NotNull LanguageManager languageManager,
+            @NotNull LanguageManagerImpl languageManager,
             int id,
             @NotNull String name,
             @NotNull String alpha,
@@ -43,6 +42,10 @@ public class LanguageImpl implements Language {
         this.numberData = numberData;
 
         this.translations = new Object2ObjectOpenHashMap<>();
+    }
+
+    public @NotNull LanguageManagerImpl languageManager() {
+        return this.languageManager;
     }
 
     @Override

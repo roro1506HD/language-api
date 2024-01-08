@@ -29,6 +29,7 @@ import ovh.roro.libraries.language.api.Placeholder;
 import ovh.roro.libraries.language.api.Translation;
 import ovh.roro.libraries.language.api.data.LanguageNumberData;
 import ovh.roro.libraries.language.impl.data.LanguageNumberDataImpl;
+import ovh.roro.libraries.language.util.LibraryInstanceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +47,10 @@ import java.util.stream.Stream;
 @ApiStatus.Internal
 public class LanguageManagerImpl implements LanguageManager {
 
-    public static final @NotNull LanguageManagerImpl INSTANCE = new LanguageManagerImpl();
+    public static final @NotNull LibraryInstanceLoader<LanguageManagerImpl> LOADER = new LibraryInstanceLoader<>(
+            "LanguageManager",
+            plugin -> new LanguageManagerImpl()
+    );
 
     private static final @NotNull Logger LOGGER = LoggerFactory.getLogger("LanguageManager");
     private static final @NotNull Gson GSON = new GsonBuilder()
@@ -204,7 +208,11 @@ public class LanguageManagerImpl implements LanguageManager {
 
     @Override
     public @NotNull Component translate(@NotNull Language language, @NotNull String translationKey, @NotNull Placeholder... placeholders) {
-        String translation = ((LanguageImpl) language).translations().get(translationKey);
+        if (!(language instanceof LanguageImpl languageImpl)) {
+            throw new IllegalArgumentException("Language is expected to be LanguageImpl");
+        }
+
+        String translation = languageImpl.translations().get(translationKey);
 
         if (translation == null) {
             Language fallbackLanguage = language.fallbackLanguage();
@@ -221,7 +229,7 @@ public class LanguageManagerImpl implements LanguageManager {
         for (int i = 0; i < placeholders.length; i++) {
             PlaceholderImpl placeholder = (PlaceholderImpl) placeholders[i];
 
-            resolvers[i] = placeholder.toTagResolver().apply(language);
+            resolvers[i] = placeholder.toTagResolver().apply(languageImpl);
         }
 
         return this.miniMessage.deserialize(translation, resolvers);

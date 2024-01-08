@@ -14,7 +14,7 @@ import java.util.List;
 public interface LanguageManager {
 
     static @NotNull LanguageManager languageManager() {
-        return LanguageManagerImpl.INSTANCE;
+        return LanguageManagerImpl.LOADER.getOrCreate();
     }
 
     /**

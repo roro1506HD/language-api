@@ -6,7 +6,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import ovh.roro.libraries.language.api.Language;
 import ovh.roro.libraries.language.api.Placeholder;
 import ovh.roro.libraries.language.api.Translation;
 import ovh.roro.libraries.language.api.ZonedTime;
@@ -21,12 +20,12 @@ public final class PlaceholderImpl implements Placeholder {
 
     private final @NotNull String code;
     private final @NotNull Object value;
-    private final @NotNull Function<Language, TagResolver> toTagResolver;
+    private final @NotNull Function<LanguageImpl, TagResolver> toTagResolver;
 
     private PlaceholderImpl(
             @NotNull String code,
             @NotNull Object value,
-            @NotNull Function<Language, TagResolver> toTagResolver
+            @NotNull Function<LanguageImpl, TagResolver> toTagResolver
     ) {
         this.code = code;
         this.value = value;
@@ -45,7 +44,7 @@ public final class PlaceholderImpl implements Placeholder {
         return new PlaceholderImpl(
                 code,
                 translation,
-                language -> TagResolver.resolver(code, Tag.inserting(LanguageManagerImpl.INSTANCE.translate(language, translation)))
+                language -> TagResolver.resolver(code, Tag.inserting(language.languageManager().translate(language, translation)))
         );
     }
 
@@ -61,7 +60,7 @@ public final class PlaceholderImpl implements Placeholder {
         return new PlaceholderImpl(
                 code,
                 value,
-                language -> LanguageManagerImpl.INSTANCE.resolveNumber(language, code, value)
+                language -> language.languageManager().resolveNumber(language, code, value)
         );
     }
 
@@ -69,7 +68,7 @@ public final class PlaceholderImpl implements Placeholder {
         return new PlaceholderImpl(
                 code,
                 value,
-                language -> LanguageManagerImpl.INSTANCE.resolveNumber(language, code, value)
+                language -> language.languageManager().resolveNumber(language, code, value)
         );
     }
 
@@ -91,7 +90,7 @@ public final class PlaceholderImpl implements Placeholder {
         return this.value;
     }
 
-    public @NotNull Function<Language, TagResolver> toTagResolver() {
+    public @NotNull Function<LanguageImpl, TagResolver> toTagResolver() {
         return this.toTagResolver;
     }
 
