@@ -11,7 +11,7 @@ import java.util.TimeZone;
 public interface ZonedTime {
 
     static @NotNull ZonedTime of(long millis) {
-        return ZonedTime.of(millis, TimeZone.getDefault().toZoneId());
+        return ZonedTime.of(millis, TimeZone.getTimeZone("GMT").toZoneId());
     }
 
     static @NotNull ZonedTime of(long millis, @NotNull ZoneId zone) {
